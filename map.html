@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps Example</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkVQ0GGqeHPWmDZgRAx2aMmubRXesoJrI"></script>
+    <style>
+        #map {
+            height: 100vh; /* Full screen height */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live GPS Tracker</h1>
+    <div id="map"></div>
+    <script>
+        // Initialize and display the map
+        function initMap() {
+            const initialPosition = { lat: 0, lng: 0 }; // Default starting position
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: initialPosition,
+            });
+            const marker = new google.maps.Marker({
+                position: initialPosition,
+                map: map,
+                title: "User Location",
+            });
+
+            // Fetch and update location periodically
+            setInterval(() => {
+                fetch("https://your-server.com/get_location.php") // Your server endpoint
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const newPosition = { lat: parseFloat(data.lat), lng: parseFloat(data.lng) };
+                        marker.setPosition(newPosition);
+                        map.setCenter(newPosition);
+                    })
+                    .catch((error) => console.error("Error fetching location:", error));
+            }, 5000);
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
